@@ -14,8 +14,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-    
+    //return view('welcome');
+    return redirect('home');
 });
 
+
+
+Route::get('/home', function () {
+    return view('home');
+});
+
+Route::get('/Tech-people', function () {
+    return view('quiz');
+});
+
+Route::get('/Tech-people/feedback', function () {
+    return view('feedback');
+});
+
+ 
  
