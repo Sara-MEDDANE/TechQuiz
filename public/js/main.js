@@ -7,4 +7,4 @@ function Swap() {
     else {
       correction.style.display = "none";
     }
-  }
+}

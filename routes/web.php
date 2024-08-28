@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QuizController;
+use App\Models\Choice;
+use App\Models\Question;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,17 +23,14 @@ Route::get('/', function () {
 
 
 
-Route::get('/home', function () {
-    return view('home');
-});
+Route::get('/home', [QuizController::class, 'getCategories']);
 
-Route::get('/Tech-people', function () {
-    return view('quiz');
-});
+Route::get('/{category}', [QuizController::class, 'showQuiz']);
+    
 
-Route::get('/Tech-people/feedback', function () {
+Route::get('/{category}/feedback', function () {
     return view('feedback');
 });
 
- 
+
  

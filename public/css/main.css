@@ -1,3 +1,5 @@
+ 
+/*---------------------------------- HOME PAGE --------------------------------------------*/
 #quizLink {
   color: black;
   text-decoration: none;
@@ -5,8 +7,9 @@
 
 #quizLink:hover{
     cursor:pointer;
-    color: #24ADF3; 
+    color:#24ADF3;
 }
+ 
 
 #mainHeading{
   color:#24ADF3;
