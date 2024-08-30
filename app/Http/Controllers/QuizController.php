@@ -30,8 +30,10 @@ class QuizController extends Controller
         $category = str_replace('-', ' ', $category);
         $q = new Question;
         $question = $q->selectQuestion($category, $p);
-        $choice = Choice::selectChoices($category, $p);
-        $quiz = ['question'=>$question , 'choice'=>$choice];
+        $choice = Choice::selectChoices($category, $p)[0];
+        $correctChoicesCount = Choice::selectChoices($category, $p)[1];
+
+        $quiz = ['question'=>$question , 'choice'=>$choice, 'correctChoicesCount'=>$correctChoicesCount];
 
         return response()->json($quiz);
     }

@@ -63,18 +63,70 @@
 
           function updatePage(p){
 
-              var previousPageElement = document.getElementById('page'+currentPage);
-              previousPageElement.classList.remove('active');
-            
-              currentPage = p; //update to the clicked page
-
-              var currentPageElement = document.getElementById('page'+currentPage);
-              currentPageElement.classList.add('active');
+            const previousPageElement = document.getElementById('page'+currentPage);
+            previousPageElement.classList.remove('active');
+          
+            currentPage = p; //update to the clicked page
+            const currentPageElement = document.getElementById('page'+currentPage);
+            currentPageElement.classList.add('active');
           }
 
 
+          function limitCheckboxes(maxCheckedboxes){
+
+            const checkboxes = document.querySelectorAll("input[type = checkbox]");//get all checkboxes that are checked
+
+            for(let i=0; i<checkboxes.length; i++){ //Add event listener to each checkbox, if it is triggered =>
+                                                    //compare the number of all checked checkboxes with the number of correct choices 
+              checkboxes[i].addEventListener('change', (event)=>{ 
+                const checkedboxes = document.querySelectorAll("input[type = checkbox]:checked");  
+                if(checkedboxes.length > maxCheckedboxes){
+                  checkboxes[i].checked = false;
+                  alert('You can select only '+maxCheckedboxes+' option(s)!');
+                }  
+              });
+            }  
+          }
+
+
+          function saveAnswersToSession(){
+
+            const options = document.querySelectorAll("input[type = checkbox]:checked");
+            const checkedOptions = Array.from(options).map(checkbox => checkbox.value);
+            //console.log(JSON.stringify(checkedOptions));
+            sessionStorage.setItem('question'+currentPage, JSON.stringify(checkedOptions)); 
+
+          }
+
+
+          function getState(){
+
+            const fetchedOptions = sessionStorage.getItem('question'+currentPage);
+            var optionsArray = JSON.parse(fetchedOptions);
+
+            if(optionsArray === null || optionsArray.length === 0)
+            {
+             for(let i=1; i<=4; i++) //display the state of the current page, if checkboxes were checked, make them checked
+                document.getElementById("checkbox"+i).checked = false;
+            }
+            else 
+            {
+             for(let j=1; j<=4; j++) //display the state of the current page, if checkboxes were checked, make them checked
+             { 
+               if(optionsArray.includes(document.getElementById("checkbox"+j).value)) 
+                   document.getElementById("checkbox"+j).checked = true;
+
+               else 
+                   document.getElementById("checkbox"+j).checked = false;    
+             }
+            }
+          }
+
+
+
           function fetchQuiz(p)
-          {
+          {   
+              saveAnswersToSession();
               updatePage(p);
 
               fetch('/api/getQuizData/'+'{{ $category }}'+'/page/'+currentPage, {method: 'GET'})
@@ -85,14 +137,15 @@
                   return response.json();
               })
               .then(data => {
-
+                  console.log(data);
                   document.getElementById('question').innerHTML = data.question[0].question;
-                  for(var option=1; option<=4; option++)
+                  for(let option=1; option<=4; option++)
                    { 
                      document.getElementById('checkbox'+option).setAttribute('value', data.choice[option-1].choice);
                      document.getElementById('option'+option).innerHTML = data.choice[option-1].choice;
-
                    }    
+                  limitCheckboxes(data.correctChoicesCount);
+                  getState();
               })
               .catch(error => { console.error(error);});
 
