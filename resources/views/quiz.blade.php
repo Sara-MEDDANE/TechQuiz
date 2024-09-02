@@ -12,12 +12,19 @@
 
     <body>
 
-        <form class="card col-8 mx-auto mt-5" action="" method="">
+        <form class="card col-8 mx-auto mt-5">
        
          <div class="card-header">
             <h4 style="color:#24ADF3; display: inline-block">TechQuiz | </h4> 
             <h5 style="display: inline-block;"> {{ $category }}</h5>
-            <h6 style="display: inline-block; float: right">Time Left  10:00</h6>
+
+            <h6 id="timer" style="display: inline-block; float: right">
+              Time left &nbsp;
+              <span id="minutes">{{$pages/2}}</span>
+              :
+              <span id="seconds" >00</span>
+              minutes
+            </h6>
          </div>
 
          <div class="card-body">
@@ -48,10 +55,10 @@
               @for($p=1; $p<= $pages; $p++)
                 <li id='page{{$p}}' class="page-item"><button onclick = "fetchQuiz({{$p}})" class="page-link" type="button">{{ $p }}</button></li>
               @endfor
-          
+  
             </ul>
                 
-           <button class="btn btn-primary mt-2 float-end" id="submitBtn">Submit</button>
+           <button class="btn btn-primary mt-2 float-end" id="submitBtn" type="button">Submit</button>
 
          </div>
          
@@ -59,10 +66,10 @@
 
         <script>
           
-          var currentPage = 1; 
+          var currentPage = 1;
+          let decrement; 
 
           function updatePage(p){
-
             const previousPageElement = document.getElementById('page'+currentPage);
             previousPageElement.classList.remove('active');
           
@@ -151,9 +158,61 @@
 
           }
 
-          window.addEventListener('load', fetchQuiz(currentPage));
+          window.addEventListener('load', fetchQuiz(currentPage), countDown({{ $pages/2 }}));
 
-        </script>
+ //-----------------------------------------------------------Submitting data------------------------------------------------- 
+
+          document.getElementById("submitBtn").addEventListener("click", submitAnswers);
+        
+          function countDown(minutes){
+
+            const htmlMin = document.getElementById("minutes");
+            const htmlSec =document.getElementById("seconds");
+            let sec=60;
+            minutes = minutes-1;
+            htmlMin.innerHTML= minutes;
+            decrement = setInterval(function () {
+              sec--;
+              htmlSec.innerHTML=sec;
+              if(minutes == 0 && sec == 0){
+                submitAnswers();
+                clearInterval(decrement);  
+              }
+              else if(minutes!=0 && sec == 0){
+                sec = 60;
+                minutes--;
+                htmlMin.innerHTML= minutes;
+              }  
+            }, 1000);
+          }
+
+          function submitAnswers(event){
+
+            clearInterval(decrement);
+            saveAnswersToSession();
+            let userAnswers ={};
+            for(let i=1; i<=sessionStorage.length; i++)
+            {
+              let value = sessionStorage.getItem('question'+i);
+              userAnswers['question'+i] = value;
+            }
+            sessionStorage.clear(); 
+
+            fetch('/{{ $category }}', {
+                  method: 'POST',
+                  body: JSON.stringify({userAnswers}),
+                  headers: {'Content-Type': 'application/json',
+                            'Accept': 'application/json', 
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')}
+                  })
+             .then(response => response.json())
+             .then(data => {
+                console.log(data);
+             })
+             .catch(error => {console.error(error); });
+          }
+
+          </script>
 
      </body>
 </html>

@@ -38,6 +38,12 @@ class QuizController extends Controller
         return response()->json($quiz);
     }
 
+    public function processUserAnswers(Request $request, $category){
+ 
+        return response()->json(['Recieved user answers' => $request->all()]);
+   
+    }
+
 
 
 
