@@ -32,4 +32,20 @@ class Choice extends Model
 
         return [$choices, $correctChoicesCount[0]->correctChoicesCount];                           
     }
+
+    public static function selectCorrectChoices($category, $i){
+        
+        return self::select('choice')
+                     ->where('is_correct', 1)
+                     ->where('qst_id', Question::currentPageQuestion($category, $i))
+                     ->get();
+    }
+
+    public static function selectFeedbacKChoices($question){
+
+        return self::select('choice', 'is_correct')  
+                   ->join('questions', 'choices.qst_id', '=', 'questions.qst_id')
+                   ->where('question', $question)
+                   ->get();
+    }
 }

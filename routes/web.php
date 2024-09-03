@@ -27,11 +27,6 @@ Route::get('/home', [QuizController::class, 'getCategories']);
 
 Route::get('/{category}', [QuizController::class, 'showQuiz']);
     
-
-Route::get('/{category}/feedback', function () {
-    return view('feedback');
-});
-
 Route::post('/{category}', [QuizController::class, 'processUserAnswers']);
 
 

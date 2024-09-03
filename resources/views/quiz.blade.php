@@ -12,6 +12,7 @@
 
     <body>
 
+    <div id="content">
         <form class="card col-8 mx-auto mt-5">
        
          <div class="card-header">
@@ -19,11 +20,11 @@
             <h5 style="display: inline-block;"> {{ $category }}</h5>
 
             <h6 id="timer" style="display: inline-block; float: right">
-              Time left &nbsp;
+              Time left: &nbsp;
               <span id="minutes">{{$pages/2}}</span>
-              :
+              minute(s) and
               <span id="seconds" >00</span>
-              minutes
+              second(s)
             </h6>
          </div>
 
@@ -63,6 +64,7 @@
          </div>
          
         </form>
+      </div>
 
         <script>
           
@@ -208,9 +210,22 @@
              .then(response => response.json())
              .then(data => {
                 console.log(data);
+                document.getElementById("content").innerHTML = data.feedbackContent;
              })
              .catch(error => {console.error(error); });
           }
+
+          function Swap() {
+            let correction = document.getElementById("correction");
+    
+            if (correction.style.display === "none") {
+              correction.style.display = "block";
+            } 
+            else {
+              correction.style.display = "none";
+            }
+          }
+          
 
           </script>
 

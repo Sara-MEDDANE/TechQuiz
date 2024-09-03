@@ -46,4 +46,12 @@ class Question extends Model
         
     }
 
+
+    public static function selectQuestions($category){
+        return self::select('question')    
+                     ->join('quiz', 'questions.quiz_id', '=', 'quiz.quiz_id')   
+                     ->where('category', $category)
+                     ->get();
+    }
+
 }
