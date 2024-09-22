@@ -29,6 +29,6 @@ class Quiz extends Model
 
 
 
-
+ 
  
 }

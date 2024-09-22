@@ -21,23 +21,22 @@ class Choice extends Model
 
     public static function selectChoices($category, $p){
 
-        $choices = self::select('choice')
-                         ->where('qst_id', Question::currentPageQuestion($category, $p))
-                         ->get();     
+        $choices = self::where('qst_id', Question::currentQuestionId($category, $p))
+                        ->pluck('choice');
+                            
 
-        $correctChoicesCount = self::select(DB::raw('COUNT(is_correct) AS correctChoicesCount'))
-                                   ->where('is_correct', 1) 
-                                   ->where('qst_id', Question::currentPageQuestion($category, $p))
-                                   ->get();    
+        $correctChoicesCount = self::where('is_correct', 1) 
+                                   ->where('qst_id', Question::currentQuestionId($category, $p))
+                                   ->count();    
 
-        return [$choices, $correctChoicesCount[0]->correctChoicesCount];                           
+        return [$choices, $correctChoicesCount];                           
     }
 
     public static function selectCorrectChoices($category, $i){
         
         return self::select('choice')
                      ->where('is_correct', 1)
-                     ->where('qst_id', Question::currentPageQuestion($category, $i))
+                     ->where('qst_id', Question::currentQuestionId($category, $i))
                      ->get();
     }
 

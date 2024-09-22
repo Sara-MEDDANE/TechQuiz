@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QuizController;
-use App\Models\Choice;
-use App\Models\Question;
 
 /*
 |--------------------------------------------------------------------------

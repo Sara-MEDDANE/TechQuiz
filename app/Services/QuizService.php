@@ -45,14 +45,29 @@ class QuizService{
             $choices = Choice::selectFeedbackChoices($question->question); 
             $quiz[$question->question] = [];
             foreach($choices as $choice){
-                if(in_array($choice->choice, json_decode($userAnswers["question".$i], true)))
-                     $selected = true;
+                if(isset($userAnswers) && array_key_exists("question".$i, $userAnswers) ){  
+                    if(in_array($choice->choice, json_decode($userAnswers["question".$i], true) ) ) 
+                         $selected = true;
+                    else $selected = false;    
+                }         
                 else $selected = false;
                 array_push($quiz[$question->question], [$choice->choice, $choice->is_correct, $selected]);
             }  
             $i++;                      
         }
         return $quiz;   
+    }
+
+    public function fetchQuiz($category, $p){
+
+        $category = str_replace('-', ' ', $category);
+        $q = new Question;
+        $question = $q->selectQuestion($category, $p);
+        $choice = Choice::selectChoices($category, $p)[0];
+        $correctChoicesCount = Choice::selectChoices($category, $p)[1];
+
+        $quiz = ['question'=>$question , 'choice'=>$choice, 'correctChoicesCount'=>$correctChoicesCount];
+        return $quiz;
     }
     
 }

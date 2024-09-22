@@ -24,24 +24,18 @@ class QuizController extends Controller
 
     public function showQuiz($category){
 
+        $quiz = $this->quizService->fetchQuiz($category, 1);
         $category = str_replace('-', ' ', $category);
         $pages = Question::getTotalofQuestions($category);
         if($pages == 0)
             abort(404, 'quiz not found !');
         else 
-            return view('quiz', ['category' => $category, 'pages' => $pages]);
+            return view('quiz', ['category' => $category, 'pages' => $pages, 'quiz'=>$quiz]);
     }
 
     public function getQuiz($category, $p){
 
-        $category = str_replace('-', ' ', $category);
-        $q = new Question;
-        $question = $q->selectQuestion($category, $p);
-        $choice = Choice::selectChoices($category, $p)[0];
-        $correctChoicesCount = Choice::selectChoices($category, $p)[1];
-
-        $quiz = ['question'=>$question , 'choice'=>$choice, 'correctChoicesCount'=>$correctChoicesCount];
-
+        $quiz = $this->quizService->fetchQuiz($category, $p);
         return response()->json($quiz);
     }
 
@@ -54,8 +48,9 @@ class QuizController extends Controller
 
         return response()->json([ 'feedbackContent' => view('feedback', ['score'=>$score, 
                                                                          'quiz'=>$quiz, 
-                                                                         'total'=>$total
-                                                                         ])->render()]);
+                                                                         'total'=>$total,
+                                                                         'userAnswers'=>$userAnswers
+                                                                         ])->render()]);                                                 
     }
 
  

@@ -1,0 +1,48 @@
+ 
+/*---------------------------------- HOME PAGE --------------------------------------------*/
+#quizLink {
+    color: black;
+    text-decoration: none;
+  }
+  
+  #quizLink:hover{
+      cursor:pointer;
+      color:#24ADF3;
+  }
+   
+  
+  #mainHeading{
+    color:#24ADF3;
+  }
+  
+  /*------------------------------------------------------------------------------------------------*/
+  
+  .pagination .page-link {
+    background-color: white;
+    color: black;
+  }     
+  
+  .page-item.active .page-link {
+    color: #fff;
+    background-color: #24ADF3;
+    border-color: #24ADF3;
+  }
+  
+  .btn-primary{
+    background-color: #24ADF3!important;
+    border-color: #24ADF3!important;
+  }
+  
+  .form-check-input:checked{
+    background-color: #24ADF3 !important;
+    border: 0;
+  }
+  
+   
+  .correct{
+    background-color: #DCEBD6 !important;
+    border: 0;
+  }
+  
+   
+   

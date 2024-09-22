@@ -33,12 +33,15 @@ class Question extends Model
 
     public function selectQuestion($category, $p){
         
-        return  $this->select('question')   
-                     ->where('questions.qst_id', Question::currentPageQuestion($category, $p))
-                     ->get();
+        return $this->join('quiz', 'questions.quiz_id', '=', 'quiz.quiz_id')
+                    ->where('quiz.category', $category)
+                    ->orderBy('questions.qst_id')
+                    ->limit(1)
+                    ->offset($p-1)
+                    ->value('question');
     }
 
-    public function scopeCurrentPageQuestion($query, $category, $p){
+    public function scopeCurrentQuestionId($query, $category, $p){
 
         return $query->join('quiz', 'questions.quiz_id', '=', 'quiz.quiz_id')
                      ->where('quiz.category', $category)
